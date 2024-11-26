@@ -87,41 +87,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static and Media Files Storage Using S3
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', 'your-access-key-id')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', 'your-secret-access-key')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', 'your-bucket-name')
-AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'your-region')  # Example: 'us-east-1'
-
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None  # Ensures files are private unless specified otherwise
-
-# Use S3 for production and local settings for development
-if DEBUG:
-    STATIC_URL = '/static/'
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Local static files directory
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   # Directory for `collectstatic`
-    MEDIA_URL = '/media/'                                # URL for media files
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')         # Directory for media uploads
-else:
-    # Production (S3 settings)
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/staticfiles/"
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-# STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/staticfiles/"
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-# MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-# # Local Static Files (Optional for Development)
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'heartcare/static')]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 # Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -132,3 +97,28 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your-email-password
 
 # Default Primary Key Field Type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Static and Media Files Storage Using S3
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', 'your-access-key-id')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', 'your-secret-access-key')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', 'your-bucket-name')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'your-region')  # Example: 'us-east-1'
+
+# AWS S3 Custom Domain for production
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+
+# AWS S3 Storage Locations for Static and Media Files
+AWS_LOCATION = "staticfiles"  # Folder in the bucket for static files
+AWS_MEDIA_LOCATION = "media/"  # Folder in the bucket for media files
+
+# Static Files (Stored in S3)
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# Media Files (Stored in S3)
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/"
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# S3 storage settings (to be used for both static and media in production)
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None  # Ensures files are private unless specified otherwise
