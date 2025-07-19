@@ -25,9 +25,9 @@ jobs:
 
       - name: Build and Push Docker image to ECR
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/health-care:latest ./docker
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/health-care:latest -f docker/Dockerfile .
           docker push ${{ steps.login-ecr.outputs.registry }}/health-care:latest
-
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
