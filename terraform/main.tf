@@ -3,11 +3,15 @@ provider "aws" {
 }
 
 # -----------------------
-# ECR Repository
-# -----------------------
 resource "aws_ecr_repository" "repo" {
   name = "health-care"
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [name]
+  }
 }
+
 
 # -----------------------
 # ECS Cluster
@@ -45,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
 resource "aws_security_group" "ecs_sg" {
   name        = "ecs-sg"
   description = "Allow traffic to ECS containers"
-  vpc_id      = "<vpc-05fbb1fdf1b7ce327>"  # Replace with your actual VPC ID
+  vpc_id = "vpc-05fbb1fdf1b7ce327"  # ✅ correct format
 
   ingress {
     from_port   = 8000
