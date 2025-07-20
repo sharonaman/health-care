@@ -27,7 +27,7 @@ jobs:
         run: |
           docker build -t ${{ steps.login-ecr.outputs.registry }}/health-care:latest -f docker/Dockerfile .
           docker push ${{ steps.login-ecr.outputs.registry }}/health-care:latest
-          
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -39,6 +39,8 @@ jobs:
         run: terraform plan
         working-directory: terraform
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      - name: Terraform Destroy
+        run: |
+          terraform init
+          terraform destroy -auto-approve
         working-directory: terraform
