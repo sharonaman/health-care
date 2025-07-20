@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
 resource "aws_security_group" "ecs_sg" {
   name        = "ecs-sg"
   description = "Allow traffic to ECS containers"
-  vpc_id      = "<your-vpc-id>"  # Replace with your actual VPC ID
+  vpc_id      = "<vpc-05fbb1fdf1b7ce327>"  # Replace with your actual VPC ID
 
   ingress {
     from_port   = 8000
@@ -99,7 +99,7 @@ resource "aws_ecs_service" "healthcare" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = ["<your-subnet-id>"] # Replace with a public subnet ID
+    subnets         = ["subnet-0ae117225708261ff"] # Replace with a public subnet ID
     security_groups = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }
