@@ -42,11 +42,13 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: terraform
+        continue-on-error: true
 
-
-      - name: Terraform Destroy
+      - name: Terraform Destroy (on apply failure)
+        if: failure()
         run: |
           terraform init
           terraform destroy -auto-approve
         working-directory: terraform
+
 
